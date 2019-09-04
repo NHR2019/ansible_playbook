@@ -1,0 +1,20 @@
+---
+- name: "http, nginx,copy"
+  hosts: all
+  tasks:
+    - name: "install apache package"
+      yum:
+        name: "httpd"
+        state: "present"
+    - name: "start apche"
+      service:
+        name: "httpd"
+        state: "started"
+        enabled: yes
+    - name: "copy test.html"
+      copy:
+        src: "test.html"
+        dest: "/var/www/html"
+        ower: "apache"
+        group: "apache"
+     
