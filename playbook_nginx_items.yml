@@ -1,0 +1,53 @@
+---
+- name: playbook nginx
+  hosts: all
+  tasks:
+    - name: installation du referentielle depots epelrelease
+      yum:
+        name: epel-release
+        state: present
+    - name: installation de nginx
+      yum: 
+        name: nginx 
+        state: latest
+    - name: rendre enabled
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+
+    - name: creation du directory niko.com dans usr/share/nginx
+      file:
+        path: /usr/share/nginx/niko.com
+        state: directory
+    - name: creation du directory nikolas.com dans usr/share/nginx
+      file:
+        path: /usr/share/nginx/nikolas.com
+        state: directory 
+
+    - name: copy index.html dans usr/share/nginx/niko.com
+      copy:
+        src: /etc/ansible/index.html
+        dest: /usr/share/nginx/niko.com/index.html
+    - name: copy index.html dans usr/share/nginx/nikolas.com
+      copy:
+        src: /etc/ansible/index.html
+        dest: /usr/share/nginx/nikolas.com/index.html
+        
+
+    - name: configuration bloc for niko.com
+      copy:
+        src: /etc/ansible/niko.com.conf
+        dest: /etc/nginx/conf.d/niko.com.conf
+
+    - name: configuration bloc for nikolas.com
+      copy:
+        src: /etc/ansible/nikolas.com.conf
+        dest: /etc/nginx/conf.d/nikolas.com.conf
+
+    - name: recharger la conf de nginx
+      service:
+        name: nginx
+        state: restarted
+
+
