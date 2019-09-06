@@ -1,0 +1,23 @@
+---
+- name: ajout nouveau user et sa clef ssh.
+  hosts: all 
+  tasks:
+    - name: creation de user 
+      user:
+         name: johan
+         shell: /bin/bash
+         state: present
+    - name: Set authorized key taken from file
+      authorized_key:
+        user: johan
+        state: present
+        key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}" 
+    - name: installation multiple
+      yum:
+        name: "{{ item }}"
+        state: latest
+      with_items:
+        - git
+        - zsh
+        #- htop
+        - sudo    
